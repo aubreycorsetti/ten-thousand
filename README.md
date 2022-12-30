@@ -21,3 +21,13 @@ Tests: Used pytest and ran through the terminal
 Our pseudo code:
 
 ![psuedo_code_lab_07.png](..%2F..%2F..%2F..%2FDesktop%2Fpsuedo_code_lab_07.png)
+
+Lab Class 08
+
+Project: Ten Thousand Game
+
+Author: Aubrey Corsetti
+
+I worked with Dylan, Harper, Oliver and Ian
+
+Tests: Used pytest and ran through the terminal
