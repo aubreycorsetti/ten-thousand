@@ -1,0 +1,40 @@
+Welcome to Ten Thousand
+(y)es to play or (n)o to decline
+> y
+# Idea wise- what do we need to do?
+# invite_to_play() -> return a y or n (alternitavly T/F)
+# if n then decline_game()
+# else start_game()
+
+# def start_game():
+# total_score = 0
+# loop for round_num in given number of rounds
+#   round_score = do_round(round_num, function_to_roll_dice)
+#   if round_score was a quit (I used -1) then
+#       return
+#   complete_round(round_num, total_score, round_score) show stats
+#       end_game(total_score)
+
+Starting round 1 # start_round(round_num, function_to_roll_dice) -> round_score or quit
+Rolling 6 dice...
+*** 2 3 1 3 4 2 ***
+Enter dice to keep, or (q)uit:
+> 1
+You have 100 unbanked points and 5 dice remaining
+(r)oll again, (b)ank your points or (q)uit:
+> r
+Rolling 5 dice...
+*** 4 2 4 4 6 ***
+Enter dice to keep, or (q)uit:
+> 444
+You have 500 unbanked points and 2 dice remaining
+(r)oll again, (b)ank your points or (q)uit:
+> b
+You banked 500 points in round 1
+Total score is 500 points
+Starting round 2
+Rolling 6 dice...
+*** 3 2 3 2 1 4 ***
+Enter dice to keep, or (q)uit:
+> q
+Thanks for playing. You earned 500 points

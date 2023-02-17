@@ -1,57 +1,104 @@
-from random import randint
 from collections import Counter
+from random import randint
 
 
 class GameLogic:
+    @staticmethod
+    def roll_dice(num=6):
+        # version_1
+
+        return tuple([randint(1, 6) for _ in range(num)])
 
     @staticmethod
-    def validate_keepers(dice_roll, dice_kept):
-        dice_roll_validation = Counter(dice_roll)
-        dice_kept_validation = Counter(dice_kept)
+    def calculate_score(dice):
+        """
+        dice is a tuple of integers that represent the user's selected dice pulled out from current roll
+        """
+        # version_1
 
-        if len(dice_kept_validation) <= len(dice_roll_validation):
-            if all(dice_kept_validation[key] <= dice_roll_validation[key] for key in dice_kept_validation.keys()):
-                return True
-            return False
-        else:
-            return False
+        if len(dice) > 6:
+            raise Exception("Cheating Cheater!")
 
-    @staticmethod
-    def roll_dice(number):
-        return tuple(randint(1, 6) for x in range(0, number))
+        counts = Counter(dice)
 
-    @staticmethod
-    # Calculates Scores and references them to test value to determine output
-    def calculate_score(dice_roll):
-        dice_count = Counter(dice_roll)
+        if len(counts) == 6:
+            return 1500
 
-        score_dict = {1: 1000, 2: 200, 3: 300, 4: 400, 5: 500, 6: 600}
+        if len(counts) == 3 and all(val == 2 for val in counts.values()):
+            return 1500
 
         score = 0
 
-        # calculate straight
-        if len(dice_count) == 6:
-            return 1500
+        ones_used = fives_used = False
 
-        # calculate triple doubles
-        if len(dice_count) == 3 and all(value == 2 for value in dice_count.values()):
-            return 1500
+        for num in range(1, 6 + 1):
 
-        # score based on face value
-        for face_value, count in dice_count.items():
-            if face_value == 5 and count <= 2:
-                score += 50 * count
-            elif face_value == 1 and count <= 2:
-                score += 100 * count
-            elif face_value == 1 and count == 3:
-                score += 1000
-            elif count == 3:
-                score += score_dict[face_value]
-            elif count == 4:
-                score += score_dict[face_value] * 2
-            elif count == 5:
-                score += score_dict[face_value] * 3
-            elif count == 6:
-                score += score_dict[face_value] * 4
+            pip_count = counts[num]
+
+            if pip_count >= 3:
+
+                if num == 1:
+
+                    ones_used = True
+
+                elif num == 5:
+
+                    fives_used = True
+
+                score += num * 100
+
+                # handle 4,5,6 of a kind
+                pips_beyond_3 = pip_count - 3
+
+                score += score * pips_beyond_3
+
+                # bug if 2 threesomes? Let's test it
+
+                # 1s are worth 10x
+                if num == 1:
+                    score *= 10
+
+        if not ones_used:
+            score += counts.get(1, 0) * 100
+
+        if not fives_used:
+            score += counts.get(5, 0) * 50
 
         return score
+
+    @staticmethod
+    def validate_keepers(roll, keepers):
+        # version_3
+
+        # pro tip: you can do some math operations with counters
+        # check https://docs.python.org/3/library/collections.html#collections.Counter
+        keeper_counter = Counter(keepers)
+        roll_counter = Counter(roll)
+
+        # a "valid" result is an empty Counter result
+        result = keeper_counter - roll_counter
+
+        # an empty Counter is falsy, so use "not" to flip it
+        return not result
+
+    @staticmethod
+    def get_scorers(dice):
+        # version_3
+
+        all_dice_score = GameLogic.calculate_score(dice)
+
+        if all_dice_score == 0:
+            return tuple()
+
+        scorers = []
+
+        # for i in range(len(dice)):
+
+        for i, val in enumerate(dice):
+            sub_roll = dice[:i] + dice[i + 1 :]
+            sub_score = GameLogic.calculate_score(sub_roll)
+
+            if sub_score != all_dice_score:
+                scorers.append(val)
+
+        return tuple(scorers)
